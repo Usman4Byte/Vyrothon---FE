@@ -1,6 +1,7 @@
 import { cipherList } from '../ciphers'
 import { usePipeline } from '../hooks/usePipeline'
 import type { CipherDefinition } from '../types'
+import { useState } from 'react'
 
 const colorMap: Record<string, string> = {
   'cipher-caesar': 'bg-amber-100',
@@ -11,12 +12,12 @@ const colorMap: Record<string, string> = {
   'cipher-railfence': 'bg-teal-100',
 }
 
-function CipherLibraryItem({ cipher }: { cipher: CipherDefinition }) {
+function CipherLibraryItem({ cipher, onClick }: { cipher: CipherDefinition, onClick?: () => void }) {
   const { addNode } = usePipeline()
 
   return (
     <button
-      onClick={() => addNode(cipher.id)}
+      onClick={() => { addNode(cipher.id); onClick && onClick(); }}
       className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-xl border border-transparent hover:bg-blue-50 hover:border-blue-100 transition-all group text-left"
     >
       <div
@@ -37,24 +38,43 @@ function CipherLibraryItem({ cipher }: { cipher: CipherDefinition }) {
   )
 }
 
-export function Sidebar() {
+export function Sidebar({ mobileOpen, setMobileOpen }: { mobileOpen?: boolean, setMobileOpen?: (open: boolean) => void }) {
+  // Overlay for mobile
   return (
-    <aside className="w-[220px] flex-shrink-0 bg-white border-r border-black/10 flex flex-col overflow-hidden">
-      <div className="px-4 py-3 border-b border-black/10">
-        <p className="text-[10px] font-semibold tracking-widest uppercase text-zinc-400">
-          Cipher Library
-        </p>
-      </div>
-      <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-        {cipherList.map(cipher => (
-          <CipherLibraryItem key={cipher.id} cipher={cipher} />
-        ))}
-      </div>
-      <div className="px-4 py-3 border-t border-black/10">
-        <p className="text-[12px] text-zinc-600 leading-relaxed">
-          Click any cipher to add it to your pipeline. Drag nodes to reorder.
-        </p>
-      </div>
-    </aside>
+    <>
+      {/* Mobile overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/30 transition-opacity md:hidden ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setMobileOpen && setMobileOpen(false)}
+      />
+      <aside
+        className={`fixed z-50 top-0 left-0 h-full w-[80vw] max-w-xs bg-white border-r border-black/10 flex flex-col overflow-hidden transform transition-transform duration-300 md:static md:translate-x-0 md:w-[220px] md:flex-shrink-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} md:opacity-100 md:pointer-events-auto`}
+        style={{ boxShadow: mobileOpen ? '0 0 0 9999px rgba(0,0,0,0.1)' : undefined }}
+      >
+        <div className="px-4 py-3 border-b border-black/10 flex items-center justify-between md:block">
+          <p className="text-[10px] font-semibold tracking-widest uppercase text-zinc-400">
+            Cipher Library
+          </p>
+          {/* Close button for mobile */}
+          <button
+            className="md:hidden p-1 ml-2 text-zinc-400 hover:text-zinc-700"
+            onClick={() => setMobileOpen && setMobileOpen(false)}
+            aria-label="Close sidebar"
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 6l8 8M6 14L14 6"/></svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
+          {cipherList.map(cipher => (
+            <CipherLibraryItem key={cipher.id} cipher={cipher} onClick={() => setMobileOpen && setMobileOpen(false)} />
+          ))}
+        </div>
+        <div className="px-4 py-3 border-t border-black/10">
+          <p className="text-[12px] text-zinc-600 leading-relaxed">
+            Click any cipher to add it to your pipeline. Drag nodes to reorder.
+          </p>
+        </div>
+      </aside>
+    </>
   )
 }

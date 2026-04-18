@@ -27,7 +27,7 @@ export function IOPanel() {
 
   return (
     <div className="bg-white border-t border-black/10 px-5 py-4 flex-shrink-0">
-      <div className="max-w-[900px] mx-auto grid grid-cols-2 gap-4">
+      <div className="max-w-[900px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Input */}
         <div>
           <div className="flex items-center gap-2 mb-2">

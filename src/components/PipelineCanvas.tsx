@@ -26,7 +26,7 @@ function Connector() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-8">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center px-8 w-full h-full">
       <div className="w-16 h-16 rounded-2xl bg-zinc-100 flex items-center justify-center text-3xl opacity-40">
         ◈
       </div>
@@ -59,14 +59,14 @@ export function PipelineCanvas() {
 
   if (nodes.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 min-h-0 min-w-0 flex items-center justify-center">
         <EmptyState />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-5 py-5">
+    <div className="flex-1 min-h-0 overflow-y-auto px-5 py-5">
       <div className="max-w-[580px] mx-auto">
         <DndContext
           sensors={sensors}

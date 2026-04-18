@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { usePipeline } from '../hooks/usePipeline'
 
-export function Header() {
+export function Header({ mobile }: { mobile?: boolean } = {}) {
   const { mode, setMode, clearAll, exportToJson, importFromJson } = usePipeline()
   const [showModal, setShowModal] = useState(false)
   const [modalMode, setModalMode] = useState<'export' | 'import'>('export')
@@ -39,6 +39,111 @@ export function Header() {
     setTimeout(() => setCopied(false), 1500)
   }
 
+  // Compact version for mobile dropdown
+  if (mobile) {
+    return (
+      <div className="flex flex-col gap-2 p-3">
+        <div className="flex gap-2 mb-2">
+          <div className="flex bg-zinc-100 border border-black/10 rounded-lg p-[3px] gap-[2px] flex-1">
+            {(['encrypt', 'decrypt'] as const).map(m => (
+              <button
+                key={m}
+                onClick={() => setMode(m)}
+                className={`text-xs font-medium px-3 py-[5px] rounded-md transition-all capitalize w-1/2 ${
+                  mode === m
+                    ? 'bg-white text-zinc-900 shadow-sm'
+                    : 'text-zinc-500 hover:text-zinc-700'
+                }`}
+              >
+                {m}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button
+          onClick={handleExport}
+          className="w-full flex items-center justify-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border border-black/15 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors mb-1"
+        >
+          ↑ Export
+        </button>
+        <button
+          onClick={handleImport}
+          className="w-full flex items-center justify-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border border-black/15 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors mb-1"
+        >
+          ↓ Import
+        </button>
+        <button
+          onClick={clearAll}
+          className="w-full flex items-center justify-center gap-1.5 text-xs font-medium px-3 py-2 rounded-lg border border-black/15 bg-white text-zinc-700 hover:bg-zinc-50 transition-colors"
+        >
+          Clear
+        </button>
+
+        {/* JSON Modal */}
+        {showModal && (
+          <div
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-[999]"
+            onClick={e => e.target === e.currentTarget && setShowModal(false)}
+          >
+            <div className="bg-white rounded-2xl border border-black/15 p-5 w-[500px] max-w-[95vw] shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-semibold">
+                  {modalMode === 'export' ? 'Export Pipeline' : 'Import Pipeline'}
+                </span>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors text-sm"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <textarea
+                ref={textareaRef}
+                value={jsonText}
+                onChange={e => { setJsonText(e.target.value); setImportError('') }}
+                readOnly={modalMode === 'export'}
+                placeholder={modalMode === 'import' ? 'Paste pipeline JSON here…' : ''}
+                className="w-full h-52 font-mono text-[11px] p-3 border border-black/15 rounded-xl bg-zinc-50 text-zinc-800 resize-none focus:outline-none focus:border-blue-400 focus:bg-white transition-colors"
+              />
+
+              {importError && (
+                <p className="text-xs text-red-600 mt-2 flex items-center gap-1.5">
+                  <span>⚠</span> {importError}
+                </p>
+              )}
+
+              <div className="flex gap-2 mt-3 justify-end">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-xs font-medium px-4 py-2 rounded-lg border border-black/15 hover:bg-zinc-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                {modalMode === 'export' ? (
+                  <button
+                    onClick={handleCopyJson}
+                    className="text-xs font-medium px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 transition-colors"
+                  >
+                    {copied ? '✓ Copied!' : 'Copy JSON'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleDoImport}
+                    className="text-xs font-medium px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 transition-colors"
+                  >
+                    Import
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Default desktop version
   return (
     <>
       <header className="h-[52px] bg-white border-b border-black/10 flex items-center justify-between px-5 flex-shrink-0 z-50">
