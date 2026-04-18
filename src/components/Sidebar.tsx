@@ -1,7 +1,7 @@
 import { cipherList } from '../ciphers'
 import { usePipeline } from '../hooks/usePipeline'
 import type { CipherDefinition } from '../types'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 const colorMap: Record<string, string> = {
   'cipher-caesar': 'bg-amber-100',
