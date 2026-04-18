@@ -51,7 +51,7 @@ export function Sidebar() {
         ))}
       </div>
       <div className="px-4 py-3 border-t border-black/10">
-        <p className="text-[10px] text-zinc-400 leading-relaxed">
+        <p className="text-[12px] text-zinc-600 leading-relaxed">
           Click any cipher to add it to your pipeline. Drag nodes to reorder.
         </p>
       </div>
