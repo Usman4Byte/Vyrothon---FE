@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="./screenshot.png" alt="CipherStack Screenshot" width="600"/>
+  <img width="1920" height="925" alt="image" src="https://github.com/user-attachments/assets/e92cc0eb-7204-404f-941e-661c724a4cd1" />
+
 </p>
 
 # 🔐 CipherStack
