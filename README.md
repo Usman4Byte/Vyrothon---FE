@@ -97,5 +97,5 @@ CipherStack was inspired by the need for a hands-on, visual way to learn and exp
 ---
 
 <p align="center">
-  <em>Made with ❤️ by [Your Name]</em>
+  <em>Made with ❤️ by Usman</em>
 </p>
