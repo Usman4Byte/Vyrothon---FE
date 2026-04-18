@@ -1,0 +1,14 @@
+node_modules
+.vscode
+.git
+.gitignore
+README.md
+*.log
+scripts/
+node_modules
+.vscode
+.git
+.gitignore
+README.md
+*.log
+scripts/
